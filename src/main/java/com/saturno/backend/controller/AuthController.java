@@ -1,27 +1,31 @@
 package com.saturno.backend.controller;
 
+import com.saturno.backend.service.AuthService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private String usuarioGuardado = "admin";
-    private String passwordGuardado = "1234";
+    private final AuthService authService;
+
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @GetMapping("/registro")
-    public String registrar(@RequestParam String usuario, @RequestParam String password) {
-        usuarioGuardado = usuario;
-        passwordGuardado = password;
-        return "Usuario registrado correctamente";
+    public String registro(
+            @RequestParam String usuario,
+            @RequestParam String password) {
+
+        return authService.registro(usuario, password);
     }
 
     @GetMapping("/login")
-    public String login(@RequestParam String usuario, @RequestParam String password) {
-        if (usuario.equals(usuarioGuardado) && password.equals(passwordGuardado)) {
-            return "Autenticación satisfactoria";
-        } else {
-            return "Error en la autenticación";
-        }
+    public String login(
+            @RequestParam String usuario,
+            @RequestParam String password) {
+
+        return authService.login(usuario, password);
     }
 }
